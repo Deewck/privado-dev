@@ -1,0 +1,80 @@
+Table rols {
+  idRol integer [primary key] // Autoincrementable
+  codigo varchar(15)
+  descripcion varchar(50)
+  fechaCreacion timestamp
+}
+
+Table usuarios {
+  idUsuario integer [primary key] // Autoincrementable
+  idRol integer 
+  nombreCompleto Varchar(255)
+  carnet Varchar(255)
+  email Varchar(255)
+  fechaCreacion timestamp
+}
+
+Table facultades {
+  idFacultad integer [primary key] // Autoincrementable
+  codigo varchar(15)
+  descripcion varchar(50)
+  fechaCreacion timestamp
+}
+
+Table ciclos {
+  idCiclo integer [primary key] // Autoincrementable
+  idFacultad integer
+  codigo varchar(15)
+  descripcion varchar(50)
+  fechaCreacion timestamp
+}
+
+Table cursos {
+  IdCurso integer [primary key] // Autoincrementable
+  idCiclo integer
+  idCatedratico integer //debe ser null y completarse cuando el Catedratico se asigne este curso
+  codigo varchar(15)
+  descripcion varchar(50)
+  fechaCreacion timestamp
+}
+
+Table inscripciones { 
+  idInscripcion integer [primary key] // Autoincrementable
+  idCurso integer
+  idEstudiante integer //id de usuario con rol 'ESTUDIANTE'
+  fechaCreacion timestamp
+}
+
+Table sesiones { 
+  idSesion integer [primary key] // Autoincrementable
+  idCurso integer
+  fechaInicio timestamp
+  activa boolean
+  token varchar(255)
+  expiraEn timestamp
+}
+
+Table asistencias { 
+  idAsistencia integer [primary key] // Autoincrementable
+  idSesion integer
+  idEstudiante integer 
+  fechaCreacion timestamp
+}
+
+Ref rolesUsuaios: usuarios.idRol > rols.idRol // many-to-one
+
+Ref: "facultades"."idFacultad" < "ciclos"."idFacultad"
+
+Ref: "ciclos"."idCiclo" < "cursos"."idCiclo"
+
+Ref: "cursos"."IdCurso" < "inscripciones"."idCurso"
+
+Ref: "usuarios"."idUsuario" < "inscripciones"."idEstudiante"
+
+Ref: "cursos"."IdCurso" < "sesiones"."idCurso"
+
+Ref: "usuarios"."idUsuario" < "asistencias"."idEstudiante"
+
+Ref: "sesiones"."idSesion" < "asistencias"."idSesion"
+
+Ref: "usuarios"."idUsuario" < "cursos"."idCatedratico"
