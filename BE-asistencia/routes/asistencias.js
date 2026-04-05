@@ -1,29 +1,17 @@
-import express from 'express'
-import supabase from '../services/supabaseClient.js'
-import {authMiddleware} from '../middleware/authMiddleware.js'
+import express              from 'express'
+import supabase             from '../services/supabaseClient.js'
+import {validarRol}         from '../middleware/validarRol.js'
+import {authMiddleware}     from '../middleware/authMiddleware.js'
 
 const router = express.Router()
 
-router.post('/asistencias', authMiddleware, async (req, res) => {
+router.post('/asistencias', authMiddleware, validarRol('ESTUDIANTE'), async (req, res) => {
   try {
     const { token } = req.body
     if (!token) {
       return res.status(400).json({ error: 'Error.- Token es requerido' })
     }
-    const { idUsuario, idRol } = req.user
-    const { data: dataRol, error: errorRol } = await supabase
-      .from('roles')
-      .select('codigo')
-      .eq('idRol', idRol)
-      .maybeSingle()
-    if (errorRol) throw errorRol
-    if (!dataRol) {
-      return res.status(404).json({ error: 'Error.- Rol no encontrado' })
-    }
-    if (dataRol.codigo !== 'ESTUDIANTE') {
-      return res.status(403).json({ error: 'Error.- Solo estudiantes pueden registrar asistencia' })
-    }
-    const idEstudiante = idUsuario
+    const { idEstudiante } = req.user
     const { data: sesion, error: errorSesion } = await supabase
       .from('sesiones')
       .select('idSesion, estado, expiraEn')
