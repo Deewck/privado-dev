@@ -1,19 +1,33 @@
 import express from 'express'
 import supabase from '../services/supabaseClient.js'
+import { authMiddleware } from '../middlewares/authMiddleware.js'
 
 const router = express.Router()
 
-router.post('/asistencias', async (req, res) => {
+router.post('/asistencias', authMiddleware, async (req, res) => {
   try {
-    const { token, idEstudiante } = req.body
-    if (!token || !idEstudiante) {
-      return res.status(400).json({ error: 'Error.- Token e idEstudiante son requeridos' })
+    const { token } = req.body
+    if (!token) {
+      return res.status(400).json({ error: 'Error.- Token es requerido' })
     }
+    const { idUsuario, idRol } = req.user
+    const { data: dataRol, error: errorRol } = await supabase
+      .from('roles')
+      .select('codigo')
+      .eq('idRol', idRol)
+      .maybeSingle()
+    if (errorRol) throw errorRol
+    if (!dataRol) {
+      return res.status(404).json({ error: 'Error.- Rol no encontrado' })
+    }
+    if (dataRol.codigo !== 'ESTUDIANTE') {
+      return res.status(403).json({ error: 'Error.- Solo estudiantes pueden registrar asistencia' })
+    }
+    const idEstudiante = idUsuario
     const { data: sesion, error: errorSesion } = await supabase
       .from('sesiones')
-      .select('idSesion')
+      .select('idSesion, estado, expiraEn')
       .eq('token', token)
-      .eq('estado', true)
       .maybeSingle()
     if (errorSesion) throw errorSesion
     if (!sesion) {
@@ -29,17 +43,14 @@ router.post('/asistencias', async (req, res) => {
     }
     const { data: existente, error: errorDuplicado } = await supabase
       .from('asistencias')
-      .select('id')
-      .eq('idSesion', sesion.id)
+      .select('idAsistencia')
+      .eq('idSesion', sesion.idSesion)
       .eq('idEstudiante', idEstudiante)
       .maybeSingle()
-
     if (errorDuplicado) throw errorDuplicado
-
     if (existente) {
       return res.status(400).json({ error: 'Error.- Asistencia ya registrada' })
     }
-
     const { error: errorInsert } = await supabase
       .from('asistencias')
       .insert({
@@ -48,11 +59,9 @@ router.post('/asistencias', async (req, res) => {
       })
 
     if (errorInsert) throw errorInsert
-
     res.json({
       mensaje: 'Asistencia registrada correctamente'
     })
-
   } catch (err) {
     console.log('CATCH:', err)
     res.status(500).json({ error: 'Error.- Revisar mensajes' })
