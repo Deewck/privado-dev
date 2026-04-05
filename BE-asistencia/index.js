@@ -1,10 +1,12 @@
 import express from 'express'
 import sesionesRoutes from './routes/sesiones.js'
+import asistenciasRoutes from './routes/asistencias.js'
 import supabase from './services/supabaseClient.js'
 
 const app = express()
 app.use(express.json())
 app.use(sesionesRoutes)
+app.use(asistenciasRoutes)
 
 app.get('/test', async (req, res) => {
   const { data, error } = await supabase
