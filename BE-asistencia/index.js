@@ -4,19 +4,17 @@ import supabase from './services/supabaseClient.js'
 
 const app = express()
 app.use(express.json())
-
 app.use(sesionesRoutes)
 
 app.get('/test', async (req, res) => {
   const { data, error } = await supabase
     .from('roles')
-    .select('*')
+    .select('codigo, descripcion')
 
   if (error) {
     console.log(error)
     return res.status(500).json({ error })
   }
-
   res.json(data)
 })
 
