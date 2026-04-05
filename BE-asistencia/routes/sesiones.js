@@ -14,19 +14,19 @@ router.post('/sesiones', async (req, res) => {
     const token = Math.random().toString(36).substring(2, 10)
     const ahora = new Date()
     const expira = new Date(Date.now() + 60000) // 1 minuto
-
     const { data, error } = await supabase
-      .from('sesiones')
-      .insert([
-        {
-          idcurso: idCurso,
-          token: token,
-          activa: true,
-          fechainicio: ahora,
-          expiraen: expira
-        }
-      ])
-      .select()
+    
+    .from('sesiones')
+    .insert([
+      {
+        idCurso: idCurso,
+        token: token,
+        estado: true,
+        fechaInicio: ahora,
+        expiraEn: expira
+      }
+    ])
+    .select()
 
     if (error) {
       console.log(error)
