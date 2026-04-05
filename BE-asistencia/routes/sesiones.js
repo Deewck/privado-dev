@@ -8,16 +8,16 @@ router.post('/sesiones', async (req, res) => {
     const { codigoCurso } = req.body
     
     if (!codigoCurso) {
-      return res.status(400).json({ error: 'Curso es requerido o no se encontró' })
+      return res.status(400).json({ error: 'Error.- Curso es requerido' })
     }
-    const { data: curso, error: errorCurso } = await supabase
+    const { data: curso, error } = await supabase
       .from('cursos')
       .select('idCurso')
       .eq('codigo', codigoCurso)
-      .single()
-    if (errorCurso || !curso) {
-      console.log(errorCurso)
-      return res.status(400).json({ error: 'Curso no encontrado' })
+      .maybeSingle()
+    if (error) {
+      console.log(error)
+      return res.status(500).json({ error: 'Error.- Curso no se encontró' })
     }
     const token = Math.random().toString(36).substring(2, 10)
     const ahora = new Date()
@@ -34,7 +34,7 @@ router.post('/sesiones', async (req, res) => {
     )
     if (errorInsert) {
       console.log(errorInsert)
-      return res.status(500).json({ error: 'Error al crear sesión' })
+      return res.status(500).json({ error: 'Error.- No se creó la sesión' })
     }
 
     res.json({
@@ -45,7 +45,7 @@ router.post('/sesiones', async (req, res) => {
 
   } catch (err) {
     console.log('CATCH:', err)
-    res.status(500).json({ error: 'Error interno' })
+    res.status(500).json({ error: 'Error.- Revisar mensajes' })
   }
 })
 
