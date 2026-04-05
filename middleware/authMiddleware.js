@@ -4,7 +4,6 @@ export const authMiddleware = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization
     const jwt = authHeader?.split(' ')[1]
-
     if (!jwt) {
       return res.status(401).json({ error: 'Error.- No auotrizado' })
     }
