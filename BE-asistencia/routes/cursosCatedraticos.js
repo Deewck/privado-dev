@@ -1,6 +1,7 @@
 import express                        from 'express'
 import supabase                       from '../services/supabaseClient.js'
-import { authMiddleware, validarRol } from '../middleware'
+import { authMiddleware }             from '../middleware/authMiddleware.js'
+import { validarRol }                 from '../middleware/validarRol.js'
 const router = express.Router()
 
 router.post('/cursos/asignar-catedratico', authMiddleware, validarRol('CATEDRATICO'), async (req, res) => {
