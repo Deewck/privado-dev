@@ -3,7 +3,7 @@ import supabase                       from '../services/supabaseClient.js'
 import { authMiddleware, validarRol } from '../middleware'
 const router = express.Router()
 
-router.post('/cursosCatedraticos', authMiddleware, validarRol('CATEDRATICO'), async (req, res) => {
+router.post('/cursos/asignar-catedratico', authMiddleware, validarRol('CATEDRATICO'), async (req, res) => {
   try{  
     const {codigoCurso} = req.body
     const idCatedratico = req.user.idUsuario
@@ -12,12 +12,22 @@ router.post('/cursosCatedraticos', authMiddleware, validarRol('CATEDRATICO'), as
     }
     const {data: dataCurso, error } = await supabase
       .from('cursos')
-      .select('idCurso')
+      .select('idCurso, descripcion, idCatedratico')
       .eq('codigo', codigoCurso)
       .maybeSingle()
     if (error) throw error
     if (!dataCurso) {
       return res.status(404).json({ error: 'Error.- Curso no encontrado' })
+    }
+    if (dataCurso.idCatedratico) {
+      return res.status(400).json({
+        error: 'Error.- El curso ya tiene un catedrático asignado'
+      })
+    }
+    if (dataCurso.idCatedratico === idCatedratico) {
+      return res.status(400).json({
+        error: 'Error.- Ya tienes asignado este curso'
+      })
     }
     const { error: errorUpdate } = await supabase
       .from('cursos')
@@ -27,7 +37,11 @@ router.post('/cursosCatedraticos', authMiddleware, validarRol('CATEDRATICO'), as
       .eq('idCurso', dataCurso.idCurso)
     if (errorUpdate) throw errorUpdate
     res.json({
-      mensaje: `Catedrático asignado; Curso: ${codigoCurso}`
+    mensaje: 'Catedrático asignado correctamente',
+        curso: {
+        codigo: codigoCurso,
+        descripcion: dataCurso.descripcion
+      }
     })
   } catch (err) {
     console.log('CATCH:', err)
