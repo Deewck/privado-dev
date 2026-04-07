@@ -1,6 +1,6 @@
 import express             from 'express'
-import { authMiddleware }  from '../middleware/authMiddleware.js'
-import { obtenerCiclo }   from '../services/getCiclo.js'
+import { authMiddleware }  from '../../middleware/authMiddleware.js'
+import { obtenerCiclo }    from '../../services/getCiclo.js'
 
 const router = express.Router()
 

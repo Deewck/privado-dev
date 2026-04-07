@@ -1,13 +1,14 @@
 import 'dotenv/config'
-import express            from 'express'
-import sesionesRoutes     from './routes/sesiones.js'
-import asistenciasRoutes  from './routes/asistencias.js'
-import cursosCatedraticos from './routes/cursosCatedraticos.js'
-import cursosEstudiantes  from './routes/cursosEstudiantes.js'
-import cursosRouter       from './routes/cursos.js'
-import ciclosRouter       from './routes/ciclos.js'
-import facultadesRouter   from './routes/facultades.js'
-import rolesRouter        from './routes/roles.js'
+import express                 from 'express'
+import sesionesRoutes          from './routes/post/sesiones.js'
+import asistenciasRoutes       from './routes/post/asistencias.js'
+import cursosCatedraticos      from './routes/post/cursosCatedraticos.js'
+import cursosEstudiantes       from './routes/post/cursosEstudiantes.js'
+import cursosCatedraticoRouter from './routes/get/cursosCatedratico.js'
+import cursosEstudianteRouter  from './routes/get/cursosEstudiante.js'
+import ciclosRouter            from './routes/get/ciclos.js'
+import facultadesRouter        from './routes/get/facultades.js'
+import rolesRouter             from './routes/get/roles.js'
 
 const app = express()
 
@@ -16,7 +17,8 @@ app.use(sesionesRoutes)
 app.use(asistenciasRoutes)
 app.use(cursosCatedraticos)
 app.use(cursosEstudiantes)
-app.use('/consultas', cursosRouter)
+app.use('/consultas', cursosCatedraticoRouter)
+app.use('/consultas', cursosEstudianteRouter)
 app.use('/consultas', ciclosRouter)
 app.use('/consultas', facultadesRouter)
 app.use('/consultas', rolesRouter)

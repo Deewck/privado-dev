@@ -1,7 +1,7 @@
 import express                        from 'express'
-import supabase                       from '../services/supabaseClient.js'
-import { authMiddleware }             from '../middleware/authMiddleware.js'
-import { validarRol }                 from '../middleware/rolMiddleware.js'
+import supabase                       from '../../services/supabaseClient.js'
+import { authMiddleware }             from '../../middleware/authMiddleware.js'
+import { validarRol }                 from '../../middleware/rolMiddleware.js'
 
 const router = express.Router()
 
