@@ -9,6 +9,8 @@ export const authMiddleware = async (req, res, next) => {
     }
     const { data, error } = await supabase.auth.getUser(jwt)
     if (error || !data?.user) {
+      console.log('SUPABASE DATA:', data)
+      console.log('SUPABASE ERROR:', error)
       return res.status(401).json({ error: 'Error.- Token inválido' })
     }
     const { data: usuarioDB, error: errorUsuario } = await supabase
