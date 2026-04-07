@@ -20,14 +20,14 @@ router.post('/cursos/asignar-catedratico', authMiddleware, validarRol('CATEDRATI
     if (!dataCurso) {
       return res.status(404).json({ error: 'Error.- Curso no encontrado' })
     }
-    if (dataCurso.idCatedratico) {
-      return res.status(400).json({
-        error: 'Error.- El curso ya tiene un catedrático asignado'
-      })
-    }
     if (dataCurso.idCatedratico === idCatedratico) {
       return res.status(400).json({
         error: 'Error.- Ya tienes asignado este curso'
+      })
+    }
+    if (dataCurso.idCatedratico) {
+      return res.status(400).json({
+        error: 'Error.- El curso ya tiene un catedrático asignado'
       })
     }
     const { error: errorUpdate } = await supabase
