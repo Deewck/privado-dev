@@ -9,6 +9,7 @@ import cursosEstudianteRouter  from './routes/get/cursosEstudiante.js'
 import ciclosRouter            from './routes/get/ciclos.js'
 import facultadesRouter        from './routes/get/facultades.js'
 import rolesRouter             from './routes/get/roles.js'
+import cursosRouter            from './routes/get/cursosGlobal.js'
 
 const app = express()
 
@@ -22,6 +23,7 @@ app.use('/consultas', cursosEstudianteRouter)
 app.use('/consultas', ciclosRouter)
 app.use('/consultas', facultadesRouter)
 app.use('/consultas', rolesRouter)
+app.use('/consultas', cursosRouter)
 
 app.listen(3000, () => {
   console.log('Servidor corriendo en puerto 3000')
