@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import express                 from 'express'
+import cors                    from 'cors'
 import sesionesRoutes          from './routes/post/sesiones.js'
 import asistenciasRoutes       from './routes/post/asistencias.js'
 import cursosCatedraticos      from './routes/post/cursosCatedraticos.js'
@@ -12,7 +13,7 @@ import rolesRouter             from './routes/get/roles.js'
 import cursosRouter            from './routes/get/cursosGlobal.js'
 
 const app = express()
-
+app.use(cors())
 app.use(express.json())
 app.use(sesionesRoutes)
 app.use(asistenciasRoutes)
