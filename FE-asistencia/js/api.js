@@ -1,12 +1,15 @@
 export const API = 'http://localhost:3000'
 
 export async function fetchAPI(endpoint, options = {}) {
-  const res = await fetch(`${API}${endpoint}`, {
+
+  const token = localStorage.getItem('token')
+
+  const res = await fetch(API + endpoint, {
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
+      ...(token && { 'Authorization': `Bearer ${token}` })
     },
-    // ...options
+    ...options
   })
 
   return res.json()

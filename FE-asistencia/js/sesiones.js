@@ -6,7 +6,7 @@ export async function fetchAPI(endpoint, options = {}) {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     },
-    ...options
+    // ...options
   })
 
   return res.json()
