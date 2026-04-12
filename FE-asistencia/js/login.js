@@ -11,7 +11,6 @@ window.login = async function () {
       },
       body: JSON.stringify({ email, password })
     })
-
     const data = await res.json()
     console.log('LOGIN RESPONSE:', data)
     if (data.access_token) {
