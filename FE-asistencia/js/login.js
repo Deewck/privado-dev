@@ -1,8 +1,25 @@
 window.login = async function () {
-  const email = document.getElementById('usuario').value
-  const password = document.getElementById('password').value
-
+  const emailInput = document.getElementById('usuario')
+  const email = emailInput.value
+  const passwordInput = document.getElementById('password')
+  const password = passwordInput.value
   try {
+    if (!email.trim()) {
+  		emailInput.value = ''
+  		emailInput.placeholder = 'Campo obligatorio'
+  		emailInput.classList.add('is-invalid')
+  		return
+		} else {
+			emailInput.classList.remove('is-invalid')
+		}
+    if (!password.trim()) {
+  		passwordInput.value = ''
+  		passwordInput.placeholder = 'Campo obligatorio'
+  		passwordInput.classList.add('is-invalid')
+  		return
+		} else {
+			passwordInput.classList.remove('is-invalid')
+		}
     const res = await fetch('https://krkbhgonicjfrclsaeio.supabase.co/auth/v1/token?grant_type=password', {
       method: 'POST',
       headers: {
@@ -24,3 +41,6 @@ window.login = async function () {
     alert('Error en login')
   }
 }
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('confirmar').addEventListener('click', login)
+})
