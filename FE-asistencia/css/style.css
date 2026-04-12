@@ -22,3 +22,11 @@ body {
 .content {
   padding: 20px;
 }
+.text-danger {
+  font-size: 1.10rem;
+  margin-top: 1px;
+  margin-bottom: 10px;
+}
+.btn-signIn {
+  margin-top: 3px;
+}
