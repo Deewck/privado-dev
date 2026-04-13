@@ -1,3 +1,4 @@
+import { fetchAPI } from './api.js'
 window.singin = async function () {
   const emailInput = document.getElementById('email')
 	const email = emailInput.value
@@ -16,8 +17,11 @@ window.singin = async function () {
 	const carnetInput = document.getElementById('carnet')
 	const carnet = carnetInput.value
 	const rolSeleccionado = document.querySelector('input[name="tipoUsuario"]:checked')
-	const rol = rolSeleccionado.value 
 	const errorRol = document.getElementById('errorRol')
+	let rol
+  if (rolSeleccionado) {
+    rol = rolSeleccionado.value 
+  }
   try {
 		if (!email.trim()) {
   		emailInput.value = ''
@@ -57,7 +61,7 @@ window.singin = async function () {
 		} else {
   		errorRol.classList.add('d-none') 
 		}
-		if (rol === 'ESTUDIANTE'&!carnet.trim()) {
+		if (rol === 'ESTUDIANTE' && !carnet.trim()) {
   		carnetInput.value = ''
   		carnetInput.placeholder = 'Campo obligatorio'
   		carnetInput.classList.add('is-invalid')
@@ -65,22 +69,39 @@ window.singin = async function () {
 		} else {
 			carnetInput.classList.remove('is-invalid')
 		}
-    // const res = await fetch('https://krkbhgonicjfrclsaeio.supabase.co/auth/v1/signup', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'apikey': 'sb_publishable_u-o0r_RB34FYu6D_MdRD8A_DdJH30HC'
-    //   },
-    //   body: JSON.stringify({ email, password })
-    // })
-    // const data = await res.json()
-    // console.log('Sign In RESPONSE:', data)
-    // if (data.access_token) {
-    //   localStorage.setItem('token', data.access_token)
-    //   window.location.href = '../view/index.html'
-    // } else {
-    //   alert('Credenciales incorrectas')
-    // }
+    const res = await fetch('https://krkbhgonicjfrclsaeio.supabase.co/auth/v1/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': 'sb_publishable_u-o0r_RB34FYu6D_MdRD8A_DdJH30HC'
+      },
+      body: JSON.stringify({ email, password })
+    })
+    const data = await res.json()
+    console.log('Sign In RESPONSE:', data)
+    if (data.session) {
+      localStorage.setItem('token', data.session.access_token)
+    } else if (data.user) {
+      const data = await fetchAPI(`/consultas/roles?codigo=${rol}`)
+      console.log('roles:', data)
+      const nombreCompleto = [
+        primerNombre, segundoNombre, masNombres, primerApellido, segundoApellido]
+        .filter(n => n && n.trim() !== '')
+        .join(' ')
+	    const dataInsert = await fetchAPI('/crear-usuario', {
+        method: 'POST',
+        body: JSON.stringify({
+          idRol: data[0].idRol,
+          nombreCompleto,
+          carnet: carnet?.trim() || null,
+          email
+        })
+      })
+      console.log('usuario:', dataInsert)
+      window.location.href = '../view/index.html'
+    } else {
+      alert('Error al crear usuario')
+    }
   } catch (err) {
     console.error(err)
     alert('Error al crear usuario')
