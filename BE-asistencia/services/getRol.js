@@ -13,7 +13,6 @@ export const obtenerRol = async (codigo) => {
     .select('codigo, descripcion, idRol')
     .eq('codigo', codigo)
     if (error) throw error
-    console.log(codigo)
     return data
   }
 }

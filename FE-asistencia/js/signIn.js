@@ -77,31 +77,33 @@ window.singin = async function () {
       },
       body: JSON.stringify({ email, password })
     })
-    const data = await res.json()
-    console.log('Sign In RESPONSE:', data)
-    if (data.session) {
-      localStorage.setItem('token', data.session.access_token)
-    } else if (data.user) {
-      const data = await fetchAPI(`/consultas/roles?codigo=${rol}`)
-      console.log('roles:', data)
-      const nombreCompleto = [
-        primerNombre, segundoNombre, masNombres, primerApellido, segundoApellido]
-        .filter(n => n && n.trim() !== '')
-        .join(' ')
-	    const dataInsert = await fetchAPI('/crear-usuario', {
-        method: 'POST',
-        body: JSON.stringify({
-          idRol: data[0].idRol,
-          nombreCompleto,
-          carnet: carnet?.trim() || null,
-          email
-        })
-      })
-      console.log('usuario:', dataInsert)
-      window.location.href = '../view/index.html'
-    } else {
-      alert('Error al crear usuario')
+    const authData = await res.json()
+    console.log('Sign In RESPONSE:', authData)
+    if (authData.error) {
+      alert(authData.error.message || 'Error en signup')
+      return
     }
+    const token = authData.session?.access_token
+    if (token) {
+      localStorage.setItem('token', token)
+    } 
+    const data = await fetchAPI(`/consultas/roles?codigo=${rol}`)
+    console.log('roles:', data)
+    const nombreCompleto = [
+      primerNombre, segundoNombre, masNombres, primerApellido, segundoApellido]
+      .filter(n => n && n.trim() !== '')
+      .join(' ')
+	  const dataInsert = await fetchAPI('/crear-usuario', {
+      method: 'POST',
+      body: JSON.stringify({
+        idRol: data[0].idRol,
+        nombreCompleto,
+        carnet: carnet?.trim() || null,
+        email
+      })
+    })
+    console.log('usuario:', dataInsert)
+    window.location.href = '../view/index.html'
   } catch (err) {
     console.error(err)
     alert('Error al crear usuario')
