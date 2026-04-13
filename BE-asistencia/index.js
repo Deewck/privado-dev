@@ -2,6 +2,7 @@ import 'dotenv/config'
 import express                 from 'express'
 import cors                    from 'cors'
 import sesionesRoutes          from './routes/post/sesiones.js'
+import signIn                  from './routes/post/signIn.js'
 import asistenciasRoutes       from './routes/post/asistencias.js'
 import cursosCatedraticos      from './routes/post/cursosCatedraticos.js'
 import cursosEstudiantes       from './routes/post/cursosEstudiantes.js'
@@ -19,6 +20,7 @@ app.use(sesionesRoutes)
 app.use(asistenciasRoutes)
 app.use(cursosCatedraticos)
 app.use(cursosEstudiantes)
+app.use(signIn)
 app.use('/consultas', cursosCatedraticoRouter)
 app.use('/consultas', cursosEstudianteRouter)
 app.use('/consultas', ciclosRouter)
