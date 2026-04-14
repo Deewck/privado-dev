@@ -60,10 +60,34 @@
       </ul>
     </nav>
     <main class="col-md-9 ms-sm-auto col-lg-10 content">
-      <h2>Mis Cursos</h2>
-      <p>Aquí irá tu contenido dinámico...</p>
+      <h2>Mis Cursos - Asignaciones</h2>
+        <div class="row mb-3">
+        <div class="col-md-4">
+          <label class="form-label">Facultad</label>
+          <select id="facultadSelect" class="form-select">
+            <option value="">Seleccione...</option>
+          </select>
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+          <label class="form-control text-center w-100">
+            <input id="asignado" type="radio" name="tipoUsuario" value="asignados" class="me-2">
+            Asignados
+          </label>
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+          <button id="btnBusqueda" class="btn btn-primary w-100">
+            Buscar
+          </button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Cursos</h5>
+          <ul id="listaMisCursos" class="list-group"></ul>
+        </div>
+      </div>
     </main>
-    <script type="module" src="../js/ui.js"></script>
+    <script type="module" src="../js/misCursos.js"></script>
   </div>
 </div>
 </body>
