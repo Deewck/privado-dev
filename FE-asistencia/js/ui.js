@@ -46,7 +46,6 @@ export async function cargarCursos() {
     } else {
       data = await fetchAPI(`/consultas/cursos?facultad=${facultad}`)
     }
-    console.log('Cursos:', data)
     const select = document.getElementById('listaCursos')
     select.innerHTML = '<div class="list-group-item fw-bold"> <div class="d-flex justify-content-between"> <span>Código</span> <span>Descripción</span> </div> </div>'
     data.forEach(f => {
@@ -83,22 +82,33 @@ export async function asignadosSN() {
 export async function misCursosEstudiante() {
   let data
   try {
+    const rolBE = await fetchAPI('/consultas/mi-rol')
+    const codigoRol = rolBE[0].roles.codigo
     const radio = document.getElementById('asignado')
     let asignado = null
     let estado = null
-    let corr = 1
     if (radio.checked) {
       asignado = radio.value
     }
-    if (asignado) {
-      estado = 'Asignado'
-      data = await fetchAPI(`/consultas/cursoInscripcion?estado=${asignado}`)
-    } else {
-      asignado = 'no_asignados'
-      estado = 'Asignar'
-      data = await fetchAPI(`/consultas/cursoInscripcion?estado=${asignado}`)
+    if (codigoRol === 'ESTUDIANTE') {
+      if (asignado) {
+        estado = 'Asignado'
+        data = await fetchAPI(`/consultas/cursoInscripcion?estado=${asignado}`)
+      } else {
+        asignado = 'no_asignados'
+        estado = 'Asignar'
+        data = await fetchAPI(`/consultas/cursoInscripcion?estado=${asignado}`)
+      }
+    } else if (codigoRol === 'CATEDRATICO'){
+      if (asignado) {
+        estado = 'Asignado'
+        data = await fetchAPI(`/consultas/mis-cursos?estado=${asignado}`)
+      } else {
+        asignado = 'no_asignados'
+        estado = 'Asignar'
+        data = await fetchAPI(`/consultas/mis-cursos?estado=${asignado}`)
+      }
     }
-    console.log('Mis-Cursos:', data)
     const select = document.getElementById('listaMisCursos')
     select.innerHTML = `
       <div class="list-group-item fw-bold">
@@ -132,7 +142,7 @@ export async function misCursosEstudiante() {
             <div class="col-1">${curso.codigo}</div>
             <div class="col-4 text-start">${curso.descripcion}</div>
             <div class="col-6 text-start">
-              <button data-id="${curso.idCurso}" class="btn btn-danger btn-asignar w-10">${estado}</button>
+              <button data-id="${curso.codigo}" class="btn btn-danger btn-asignar w-10">${estado}</button>
             </div>
           </div>
         `
@@ -140,6 +150,65 @@ export async function misCursosEstudiante() {
       select.appendChild(li)
     })
   })
+  } catch (err) {
+    console.error(err)
+  }
+}
+export async function asignaCursos(codigoCurso) {
+  try {
+    const cursoCodigo = codigoCurso
+    const data = await fetchAPI('/consultas/mi-rol')
+    const codigoRol = data[0].roles.codigo
+    if (codigoRol === 'ESTUDIANTE') {
+      const data = await fetchAPI('/cursos/asignar-estudiante', {
+        method: 'POST',
+        body: JSON.stringify({ 
+          codigoCurso: cursoCodigo    
+        })
+      }) 
+    } else if (codigoRol === 'CATEDRATICO') {
+      const data = await fetchAPI('/cursos/asignar-catedratico', {
+        method: 'POST',
+        body: JSON.stringify({ 
+          codigoCurso: cursoCodigo    
+        })
+      }) 
+    }
+  await misCursosEstudiante()
+  } catch (err) {
+    console.error(err)
+  }
+}
+export async function asistencias() {
+  let data
+  try {
+    const data = await fetchAPI('/consultas/asistencia')
+    const select = document.getElementById('listaMisCursos')
+    select.innerHTML = `
+      <div class="list-group-item fw-bold">
+        <div class="row">
+          <div class="col-1">Código</div>
+          <div class="col-4">Descripción</div>
+          <div class="col-1 text-center">No.Clases</div>
+          <div class="col-2 text-center">Asistencias</div>
+          <div class="col-2 text-center">Porcentaje %</div>
+        </div>
+      </div>
+    `
+    data.forEach(a => {
+      const li = document.createElement('li')
+      li.classList.add('list-group-item')
+      li.innerHTML = `
+        <div class="row">
+          <div class="col-1">${a.codigo}</div>
+          <div class="col-4">${a.descripcion}</div>
+          <div class="col-1 text-center">${a.total_clases}</div>
+          <div class="col-2 text-center">${a.asistencias}</div>
+          <div class="col-2 text-center">${a.porcentaje}</div>
+        </div>
+      `
+      select.appendChild(li)
+    })
   } catch (err) {
     console.error(err)
   }
