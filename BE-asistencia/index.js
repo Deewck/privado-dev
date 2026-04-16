@@ -12,6 +12,8 @@ import ciclosRouter            from './routes/get/ciclos.js'
 import facultadesRouter        from './routes/get/facultades.js'
 import rolesRouter             from './routes/get/roles.js'
 import cursosRouter            from './routes/get/cursosGlobal.js'
+import miRolRouter             from './routes/get/miRol.js'
+import asitenciasEstudiante    from './routes/get/asistencias.js'
 
 const app = express()
 app.use(cors())
@@ -21,8 +23,10 @@ app.use(asistenciasRoutes)
 app.use(cursosCatedraticos)
 app.use(cursosEstudiantes)
 app.use(signIn)
+app.use('/consultas', asitenciasEstudiante)
 app.use('/consultas', cursosCatedraticoRouter)
 app.use('/consultas', cursosEstudianteRouter)
+app.use('/consultas', miRolRouter)
 app.use('/consultas', ciclosRouter)
 app.use('/consultas', facultadesRouter)
 app.use('/consultas', rolesRouter)
