@@ -83,10 +83,11 @@ window.singin = async function () {
       alert(authData.error.message || 'Error en signup')
       return
     }
-    const token = authData.session?.access_token
-    if (token) {
-      localStorage.setItem('token', token)
-    } 
+    if (!authData.session?.access_token) {
+  		alert('Usuario creado, pero no se pudo iniciar sesión automáticamente')
+  	  return
+    }
+    localStorage.setItem('token', authData.session.access_token) 
     const data = await fetchAPI(`/consultas/roles?codigo=${rol}`)
     console.log('roles:', data)
     const nombreCompleto = [

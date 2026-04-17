@@ -213,3 +213,73 @@ export async function asistencias() {
     console.error(err)
   }
 }
+export async function creaSesion(){
+  let data
+  try {
+    data = await fetchAPI('/consultas/mis-cursos?estado=asignados')
+    console.log('InfoDevuelta',data)
+    const select = document.getElementById('listaMisCursos')
+    select.innerHTML = `
+      <div class="list-group-item fw-bold">
+        <div class="row text-center">
+          <div class="col-1">Ciclo</div>
+          <div class="col-1">Código</div>
+          <div class="col-4 text-start">Descripción</div>
+          <div class="col-6 text-start">Estado</div>
+        </div>
+      </div>
+    `
+    data.forEach(ciclo => {
+      ciclo.cursos.forEach(curso => {
+      const li = document.createElement('li')
+      li.classList.add('list-group-item')
+      li.innerHTML = `
+        <div class="row text-center">
+          <div class="col-1">${ciclo.codigo}</div>
+          <div class="col-1">${curso.codigo}</div>
+          <div class="col-4 text-start">${curso.descripcion}</div>
+          <div class="col-6 text-start">
+            <button data-id="${curso.codigo}" class="btn btn-success btn-crearSesion w-10">Crea Sesión</button>
+          </div>
+        </div>
+      `
+      select.appendChild(li)
+    })
+  })
+  } catch (err) {
+    console.error(err)
+  }
+}
+export async function creaToken(codigoCurso) {
+  let respuesta
+  try {
+    const cursoCodigo = codigoCurso
+    const data = await fetchAPI('/consultas/mi-rol')
+    const codigoRol = data[0].roles.codigo
+    if (codigoRol === 'CATEDRATICO') {
+      respuesta = await fetchAPI('/sesiones', {
+        method: 'POST',
+        body: JSON.stringify({ 
+          codigoCurso: cursoCodigo    
+        })
+      }) 
+    }
+    return respuesta.token
+  } catch (err) {
+    console.error(err)
+  }
+}
+export function mostrarQR(token) {
+  const modal = document.getElementById('modalQR')
+  const canvas = document.getElementById('qrCanvas')
+
+  modal.classList.remove('d-none')
+
+  QRCode.toCanvas(canvas, token, function (error) {
+    if (error) console.error(error)
+  })
+
+  document.getElementById('cerrarQR').onclick = () => {
+    modal.classList.add('d-none')
+  }
+}

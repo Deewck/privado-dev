@@ -1,13 +1,10 @@
-export const API = 'http://localhost:3000'
+import { creaSesion, creaToken, mostrarQR } from './ui.js'
 
-export async function fetchAPI(endpoint, options = {}) {
-  const res = await fetch(`${API}${endpoint}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
-    },
-    // ...options
-  })
-
-  return res.json()
-}
+document.getElementById('botonSesion').addEventListener('click', creaSesion)
+document.getElementById('listaMisCursos').addEventListener('click', async (e) => {
+  if (e.target.classList.contains('btn-crearSesion')) {
+    const codigoCurso = e.target.dataset.id
+    const tokenQR = await creaToken(codigoCurso)
+    mostrarQR(tokenQR)
+  }
+})
