@@ -1,6 +1,8 @@
   import 'dotenv/config'
   import express                 from 'express'
   import cors                    from 'cors'
+  import path                    from 'path'
+  import { fileURLToPath }       from 'url'
   import sesionesRoutes          from './routes/post/sesiones.js'
   import signIn                  from './routes/post/signIn.js'
   import asistenciasRoutes       from './routes/post/asistencias.js'
