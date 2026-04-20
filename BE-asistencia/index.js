@@ -15,10 +15,12 @@
   import miRolRouter             from './routes/get/miRol.js'
   import asitenciasEstudiante    from './routes/get/asistencias.js'
 
+  const __filename = fileURLToPath(import.meta.url)
+  const __dirname = path.dirname(__filename)
   const app = express()
-  app.use(express.static('../FE-asistencia'))
   app.use(cors())
   app.use(express.json())
+  app.use(express.static(path.join(__dirname, '../FE-asistencia')))
   app.use(sesionesRoutes)
   app.use(asistenciasRoutes)
   app.use(cursosCatedraticos)
@@ -32,7 +34,6 @@
   app.use('/consultas', facultadesRouter)
   app.use('/consultas', rolesRouter)
   app.use('/consultas', cursosRouter)
-
   app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../FE-asistencia/view/login.html'))
   })
