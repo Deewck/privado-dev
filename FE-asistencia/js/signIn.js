@@ -70,7 +70,7 @@ window.singin = async function () {
     } else {
       carnetInput.classList.remove('is-invalid')
     }
-    const supabaseApiKey = 'TU_API_KEY_AQUI'
+    const supabaseApiKey = 'sb_publishable_u-o0r_RB34FYu6D_MdRD8A_DdJH30HC'
     const res = await fetch('https://krkbhgonicjfrclsaeio.supabase.co/auth/v1/signup', {
       method: 'POST',
       headers: {
