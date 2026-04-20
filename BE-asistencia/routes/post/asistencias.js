@@ -11,7 +11,7 @@ router.post('/asistencias', authMiddleware, validarRol('ESTUDIANTE'), async (req
     if (!token) {
       return res.status(400).json({ error: 'Error.- Token es requerido' })
     }
-    const { idEstudiante } = req.user
+    const idEstudiante = req.user.idUsuario
     const { data: sesion, error: errorSesion } = await supabase
       .from('sesiones')
       .select('idSesion, estado, expiraEn')
@@ -45,7 +45,7 @@ router.post('/asistencias', authMiddleware, validarRol('ESTUDIANTE'), async (req
         idSesion: sesion.idSesion,
         idEstudiante: idEstudiante
       })
-
+      console.log('USER:', req.user)
     if (errorInsert) throw errorInsert
     res.json({
       mensaje: 'Asistencia registrada correctamente'
