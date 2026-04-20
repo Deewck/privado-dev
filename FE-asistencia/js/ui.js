@@ -204,7 +204,7 @@ export async function asistencias() {
           <div class="col-4">${a.descripcion}</div>
           <div class="col-1 text-center">${a.total_clases}</div>
           <div class="col-2 text-center">${a.asistencias}</div>
-          <div class="col-2 text-center">${a.porcentaje}</div>
+          <div class="col-2 text-center">${parseFloat(a.porcentaje).toFixed(2)}</div>
         </div>
       `
       select.appendChild(li)
@@ -281,5 +281,15 @@ export function mostrarQR(token) {
 
   document.getElementById('cerrarQR').onclick = () => {
     modal.classList.add('d-none')
+  }
+}
+export function cerrarSesion() {
+  const btn = document.getElementById('logout')
+  if (btn) {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault()
+      localStorage.removeItem('token')
+      window.location.href = './login.html'
+    })
   }
 }

@@ -1,8 +1,11 @@
-export const API = 'http://localhost:3000'
+export const API = 'http://192.168.1.164:3000'
 
 export async function fetchAPI(endpoint, options = {}) {
-
   const token = localStorage.getItem('token')
+  if (!token) {
+    window.location.href = '/view/login.html'
+    return
+  }
   const res = await fetch(API + endpoint, {
     headers: {
       'Content-Type': 'application/json',
@@ -10,5 +13,15 @@ export async function fetchAPI(endpoint, options = {}) {
     },
     ...options
   })
+  if (res.status === 401 || res.status === 403) {
+    localStorage.removeItem('token')
+    window.location.href = '/view/login.html'
+    return
+  }
+  if (!res.ok) {
+    const text = await res.text()
+    console.error('Error API:', text)
+    throw new Error('Error en la API')
+  }
   return res.json()
 }
