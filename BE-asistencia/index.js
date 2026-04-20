@@ -16,7 +16,7 @@
   import asitenciasEstudiante    from './routes/get/asistencias.js'
 
   const app = express()
-  app.use(express.static('FE-asistencia'))
+  app.use(express.static('../FE-asistencia'))
   app.use(cors())
   app.use(express.json())
   app.use(sesionesRoutes)
@@ -33,6 +33,10 @@
   app.use('/consultas', rolesRouter)
   app.use('/consultas', cursosRouter)
 
-  app.listen(3000, '0.0.0.0',() => {
-    console.log('Servidor corriendo en puerto 3000')
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../FE-asistencia/view/login.html'))
+  })
+  const PORT = process.env.PORT || 3000
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Servidor corriendo en puerto ${PORT}`)
   })
