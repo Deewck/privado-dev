@@ -83,7 +83,7 @@ window.singin = async function () {
     const authData = await res.json()
     console.log('Sign In RESPONSE:', authData)
     if (!res.ok || authData.error) {
-      alert(authData.error?.message || 'Error en signup')
+      console.log('Sign In RESPONSE:', authData)
       return
     }
     if (!authData.session?.access_token) {
