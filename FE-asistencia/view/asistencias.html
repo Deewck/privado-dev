@@ -52,7 +52,7 @@
       <hr class="text-secondary">
       <ul class="nav flex-column">
         <li class="nav-item">
-          <a class="nav-link text-danger" href="#">
+          <a id="logOut" class="nav-link text-danger" href="#">
             <i class="bi bi-box-arrow-right me-2"></i>
             Cerrar sesión
           </a>
@@ -67,7 +67,25 @@
           <ul id="listaMisCursos" class="list-group"></ul>
         </div>
       </div>
+      <div class="card mt-3">
+        <div class="card-body text-center">
+          <h5 class="card-title">Escanear QR</h5>
+          <button id="btnScan" class="btn btn-success mb-3">
+            Iniciar escaneo
+          </button>
+          <div id="reader" style="width:300px; margin:auto;"></div>
+        </div>
+      </div>
+      <div id="asistenciaOK" class="modal-qr d-none">
+        <div class="modal-content-qr">
+          <span id="cerrarQR" class="cerrar">&times;</span>
+          <h4>Asistencia registrada</h4>
+          <p>Tu asistencia se registró correctamente.</p>
+          <button id="btnCerrar" class="btn btn-primary mt-2">Aceptar</button>
+        </div>
+      </div>
     </main>
+    <script src="https://unpkg.com/html5-qrcode"></script>
     <script type="module" src="../js/asistencias.js"></script>
   </div>
 </div>
