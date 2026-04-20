@@ -1,4 +1,4 @@
-export const API = 'http://192.168.1.164:3000'
+export const API = 'http://192.168.1.30:3000'
 
 export async function fetchAPI(endpoint, options = {}) {
   const token = localStorage.getItem('token')

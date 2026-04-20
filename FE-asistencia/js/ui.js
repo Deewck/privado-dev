@@ -284,7 +284,7 @@ export function mostrarQR(token) {
   }
 }
 export function cerrarSesion() {
-  const btn = document.getElementById('logout')
+  const btn = document.getElementById('logOut')
   if (btn) {
     btn.addEventListener('click', (e) => {
       e.preventDefault()
