@@ -52,6 +52,23 @@
       analisis
     })
   })
+  app.post('/ia/chat', (req, res) => {
+    const { mensaje } = req.body
+    let respuesta = ''
+    const msg = mensaje.toLowerCase()
+    if (msg.includes('baja asistencia')) {
+      respuesta = 'La baja asistencia indica riesgo académico. Se recomienda contactar al estudiante y dar seguimiento.'
+    } else if (msg.includes('recomendacion') || msg.includes('mejorar')) {
+      respuesta = 'Se recomienda motivar al estudiante, controlar asistencia por sesión y aplicar seguimiento temprano.'
+    } else if (msg.includes('50') || msg.includes('porcentaje')) {
+      respuesta = 'Un 50% de asistencia se considera bajo. El estudiante podría reprobar si no mejora.'
+    } else if (msg.includes('analiza')) {
+      respuesta = 'Para analizar asistencia, se calcula el porcentaje y se clasifica en alto, medio o bajo.'
+    } else {
+      respuesta = 'Puedo ayudarte a analizar asistencia, riesgos académicos o recomendaciones. Intenta preguntar algo relacionado.'
+    }
+    res.json({ respuesta })
+  })
   app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../FE-asistencia/view/login.html'))
   })
