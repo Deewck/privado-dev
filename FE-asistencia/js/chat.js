@@ -1,5 +1,6 @@
 import { fetchAPI } from './api.js'
-
+import { cerrarSesion } from './ui.js'
+cerrarSesion()
 const chat = document.getElementById('chat')
 const input = document.getElementById('mensaje')
 
