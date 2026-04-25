@@ -52,7 +52,7 @@
       analisis
     })
   })
-  app.post('/ia-chat', (req, res) => {
+  app.post('/ia/chat', (req, res) => {
     const { mensaje } = req.body
     let respuesta = ''
     const msg = mensaje.toLowerCase()
