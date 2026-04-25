@@ -36,6 +36,22 @@
   app.use('/consultas', facultadesRouter)
   app.use('/consultas', rolesRouter)
   app.use('/consultas', cursosRouter)
+  app.post('/ia/analizar-asistencia', async (req, res) => {
+  const { nombre, total_clases, asistencias } = req.body
+    const porcentaje = (asistencias / total_clases) * 100
+    let analisis = ''
+    if (porcentaje >= 80) {
+      analisis = 'Alta asistencia, buen desempeño.'
+    } else if (porcentaje >= 60) {
+      analisis = 'Asistencia regular, se recomienda mejorar.'
+    } else {
+      analisis = 'Baja asistencia, riesgo académico.'
+    }
+    res.json({
+      porcentaje,
+      analisis
+    })
+  })
   app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../FE-asistencia/view/login.html'))
   })
